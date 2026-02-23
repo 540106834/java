@@ -1,13 +1,12 @@
-太棒，这一步是**系统第一次真正“活”起来**的瞬间。💨
+
+# 🥉 第三步：让第一条 Raw 数据进库
+
+太棒，这一步是**系统第一次真正“活”起来**的瞬间。
 我们要让设备数据顺利进入数据库的 **Raw 表**。不追求性能，只求**可跑、可验证、可追溯**。
 
 下面给你**从零开始的落地步骤**。
 
----
-
-# 🥉 第三步：让第一条 Raw 数据进库
-
-## 🎯 目标
+##  目标
 
 1. Spring Boot 能启动
 2. 能接收设备数据（HTTP 模拟）
@@ -18,7 +17,7 @@
 
 # 一、创建 Spring Boot 项目
 
-### 1️⃣ 最小依赖（Maven）
+### 1️ 最小依赖（Maven）
 
 ```xml
 <dependencies>
@@ -42,7 +41,7 @@
 </dependencies>
 ```
 
-### 2️⃣ 配置数据库连接（application.properties）
+### 2️ 配置数据库连接（application.properties）
 
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/smart_attendance?useSSL=false&serverTimezone=UTC
@@ -73,10 +72,19 @@ CREATE TABLE attendance_raw (
 );
 ```
 ---
+原始数据：
+```bash
+设备ID: 860123456789012
+卡号:   00004567
+时间:   20260201075930
+类型:   0 (进校)
+SN:     0001
+功能号: 09 (F09上传)
+```
 
 1️. DTO 类 RawDataDTO.java:
 ```java
-package com.example.attendance.dto;
+package com.jinshaoyong.attendance.dto;
 
 public class RawDataDTO {
 
@@ -180,7 +188,7 @@ public class AttendanceRawController {
 ```
 
 
-# 4️⃣ 测试 
+# 4️ 测试 
 
 1️ 启动 Spring Boot
 
@@ -218,7 +226,7 @@ SELECT * FROM attendance_raw;
 | -- | --------------- | ------------------------------------------------------- | ------------------- | ------------ |
 | 1  | 860123456789012 | DIRM01003209000186012345678901200004567202602010759300A | 2026-02-01 08:00:00 | 0            |
 
-> 🎉 恭喜！系统第一次呼吸。Raw 数据成功入库。
+>  恭喜！系统第一次呼吸。Raw 数据成功入库。
 
 ---
 
@@ -231,7 +239,7 @@ SELECT * FROM attendance_raw;
 
 ---
 
-# ⚡ 下一步
+#  下一步
 
 当 Raw 表能稳定接收数据后，我们就可以进入：
 

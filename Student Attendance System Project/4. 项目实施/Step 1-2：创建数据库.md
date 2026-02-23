@@ -1,13 +1,11 @@
-好，继续。
-现在我们不“讲道理”，只**干一件今天就能完成的事**。🔧
+
+# 🥇 第一步：今天只做「Raw 接入 MVP」
+
+现在我们不“讲道理”，只**干一件今天就能完成的事**。
 
 你已经在正确的轨道上了，接下来我会像项目里的**技术负责人**一样，给你明确指令。
 
----
-
-# 🧭 当前阶段定位
-
-你现在处在这里：
+当前阶段定位你现在处在这里：
 
 ```
 系统还没跑
@@ -25,11 +23,8 @@
 
 先活下来。
 
----
 
-# 🥇 第一步：今天只做「Raw 接入 MVP」
-
-## ✅ 你要完成的 3 件事（缺一不可）
+##  你要完成的 3 件事（缺一不可）
 
 1. Spring Boot 项目能启动
 2. 能接收一段字符串（模拟设备）
@@ -39,7 +34,7 @@
 
 ---
 
-# 🧱 Step 1：确认数据库状态（5 分钟）
+#  Step 1：确认数据库状态（5 分钟）
 
 你现在数据库里**必须至少有这张表**：
 
@@ -47,23 +42,42 @@
 attendance_raw
 ```
 
+创建数据库：
+```sql
+CREATE DATABASE IF NOT EXISTS smart_attendance 
+DEFAULT CHARACTER SET utf8mb4 
+COLLATE utf8mb4_general_ci;
+use smart_attendane;
+
+CREATE USER 'attend'@'%' IDENTIFIED BY '123456';
+GRANT ALL PRIVILEGES ON smart_attendance.* TO 'attend'@'%';
+SHOW GRANTS FOR 'attend'@'%';
+
+FLUSH PRIVILEGES;
+```
+
+
 字段最小化即可：
 
 ```sql
+DROP TABLE attendance_raw;
+
 CREATE TABLE attendance_raw (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '自增主键',
 
-    device_sn VARCHAR(64) NOT NULL COMMENT '设备ID / 序列号',
-    card_no VARCHAR(32) NOT NULL COMMENT '学生卡号',
-    event_time DATETIME NOT NULL COMMENT '打卡时间',
-    event_type TINYINT NOT NULL COMMENT '0进校 1离校',
+    device_sn VARCHAR(64) NOT NULL COMMENT '设备ID',
     sn VARCHAR(16) NOT NULL COMMENT '设备上传流水号',
-
-    parsed TINYINT DEFAULT 0 COMMENT '是否解析，0未解析 1已解析',
+    raw_payload TEXT NOT NULL COMMENT '原始报文',
+    parsed TINYINT DEFAULT 0 COMMENT '0未解析 1成功 2失败',
+    error_msg VARCHAR(255) DEFAULT NULL COMMENT '解析错误信息',
     received_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '接收时间',
+    payload_hash CHAR(32) NOT NULL COMMENT 'MD5 of raw payload',
 
-    UNIQUE KEY uk_device_sn (device_sn, sn),
-    INDEX idx_card_time (card_no, event_time)
+    UNIQUE INDEX uk_payload_hash (payload_hash),
+    
+    INDEX idx_device_sn (device_sn),
+    INDEX idx_received_at (received_at),
+    INDEX idx_parsed (parsed)
 );
 
 ```
@@ -92,7 +106,7 @@ CREATE TABLE attendance_raw (
 
 ---
 
-# 🔌 Step 3：先用 HTTP 模拟设备（非常关键）
+#  Step 3：先用 HTTP 模拟设备（非常关键）
 
 ### ⚠️ 为什么不用 TCP / Netty？
 
@@ -122,11 +136,11 @@ public class DeviceMockController {
 
 你现在只关心一件事：
 
-👉 **payload 能不能进方法。**
+ **payload 能不能进方法。**
 
 ---
 
-# 🗄 Step 4：把 Raw 写进数据库（系统第一次“记忆”）
+#  Step 4：把 Raw 写进数据库（系统第一次“记忆”）
 
 写一个最简单的 Service：
 
@@ -148,7 +162,7 @@ Controller 里调用它。
 
 ---
 
-# 🧪 Step 5：模拟一条考勤数据（你熟悉的那条）
+#  Step 5：模拟一条考勤数据（你熟悉的那条）
 
 用 Postman / curl 发：
 
@@ -158,17 +172,13 @@ DIRM01003209000186012345678901200004567202602010759300A
 
 不用管对不对。
 
-只问一句：
+只问一句： **数据库里有没有多一条 raw 记录？**
 
-👉 **数据库里有没有多一条 raw 记录？**
-
-如果有：
-
-🎉 **恭喜，你的系统第一次“接收到了现实”。**
+如果有：**恭喜，你的系统第一次“接收到了现实”。**
 
 ---
 
-# 🧠 这一刻你应该意识到一件事（非常重要）
+#  这一刻你应该意识到一件事（非常重要）
 
 你已经完成了：
 
@@ -182,7 +192,7 @@ DIRM01003209000186012345678901200004567202602010759300A
 
 ---
 
-# 🪜 下一步（提前预告，不要现在做）
+#  下一步（提前预告，不要现在做）
 
 等 Raw 稳了，我们下一步只干一件事：
 
@@ -204,7 +214,7 @@ raw = 1 / 2
 
 ---
 
-# 🧩 一个非常重要的工程习惯（现在就养）
+#  一个非常重要的工程习惯（现在就养）
 
 ## 每一步都能“单独验证”
 
@@ -216,7 +226,7 @@ raw = 1 / 2
 
 ---
 
-# 🎯 现在你该做什么（明确指令）
+#  现在你该做什么（明确指令）
 
 请你现在就去做：
 
@@ -231,6 +241,6 @@ raw = 1 / 2
 
 我会立刻带你进入：
 
-👉 **解析阶段（真正有技术含量的部分）**
+ **解析阶段（真正有技术含量的部分）**
 
 你已经不是在“学习”，你是在**造一个真实系统**了。

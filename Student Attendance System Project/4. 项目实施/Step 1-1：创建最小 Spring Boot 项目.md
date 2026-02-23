@@ -1,8 +1,4 @@
-完美，这一步就是 **“先通水通电”**，把项目能跑起来，而不被额外依赖噪音干扰。
-
-我帮你梳理一个 **最小可上线 Spring Boot 项目初始化步骤**，保证你从零开始就能跑：
-
----
+# **最小可上线 Spring Boot 项目初始化步骤**
 
 #  Step 2：创建最小 Spring Boot 项目
 
@@ -55,20 +51,15 @@ attendance
 
 ## 3️ 配置数据库（application.yml）
 
-```yaml
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/attendance?useSSL=false&serverTimezone=Asia/Tokyo
-    username: root
-    password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
+```bash
+spring.datasource.url=jdbc:mysql://192.168.11.15:3306/smart_attendance?useSSL=false&serverTimezone=Asia/Tokyo
+spring.datasource.username=attend
+spring.datasource.password=123456
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
-  jpa:
-    hibernate:
-      ddl-auto: update # 开发阶段自动建表
-    show-sql: true
-    properties:
-      hibernate.format_sql: true
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
 ```
 
 > 注意：开发阶段可以用 `ddl-auto: update` 方便快速建表
@@ -100,33 +91,4 @@ public class AttendanceApplication {
 * 控制台出现 `Tomcat started on port 8080` → 项目通电成功
 * 如果报错，先检查 MySQL 数据库是否能连接
 
----
 
-##  建议
-
-1. **先少依赖，多跑起来**
-
-   > 项目能启动，能连库，比选一堆依赖更重要
-
-2. **先建实体类对应 `attendance_raw`**
-
-   > JPA 直接对应表，先能 CRUD，再加 Service 逻辑
-
-3. **接口层先写一个测试接口**
-
-   > `/ping` → 返回 `"ok"`，保证请求通
-
----
-
-下一步你可以直接开始：
-
-* **Step 3：创建 `AttendanceRaw` 实体 + Repository**
-* **Step 4：写一个简单 Controller 接收原始打卡数据**
-
-这样从设备到数据库的最小闭环就能跑起来。
-
----
-
-我可以直接帮你写**最小可跑 Spring Boot 实体 + Repository + Controller 接收打卡数据示例**，保证你把 `attendance_raw` 表写活起来。
-
-你希望我直接写吗？
