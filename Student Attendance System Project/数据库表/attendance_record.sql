@@ -16,3 +16,11 @@ CREATE TABLE attendance_record (
     INDEX idx_student_date (student_id, check_date),
     INDEX idx_check_time (check_time)
 );
+
+-- 添加外键约束，关联原始报文表attendance_raw
+ALTER TABLE attendance_record
+ADD CONSTRAINT fk_record_raw
+FOREIGN KEY (source_raw_id)
+REFERENCES attendance_raw(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
