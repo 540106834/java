@@ -9,3 +9,21 @@ CREATE TABLE school_class (
 
     FOREIGN KEY (school_id) REFERENCES school(id)
 );
+
+
+--- 插入班级数据
+INSERT INTO school_class (school_id, grade, name, status)
+VALUES (1, '2025级', '01班', 1);
+
+--- 查询班级数据
+mysql> select * from school_class;
++----+-----------+---------+-------+--------+-------------------------+
+| id | school_id | grade   | name  | status | created_at              |
++----+-----------+---------+-------+--------+-------------------------+
+|  1 |         1 | 2025级  | 01班  |      1 | 2026-02-25 19:54:05.584 |
++----+-----------+---------+-------+--------+-------------------------+
+
+UPDATE school_class
+SET grade = '2025级',
+    name = '01班'
+WHERE id = 1;

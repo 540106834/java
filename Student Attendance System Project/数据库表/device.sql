@@ -11,3 +11,9 @@ CREATE TABLE device (
     FOREIGN KEY (school_id) REFERENCES school(id),
     INDEX idx_status (status)
 );
+
+--- 插入设备数据
+INSERT INTO device
+(device_sn, school_id, location, status)
+VALUES
+('860123456789012', 1, '前门', 1);

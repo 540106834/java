@@ -159,7 +159,7 @@ public class ParserServiceImpl implements ParserService {
     private Long findStudentIdByCard(String cardNo) {
 
         return jdbcTemplate.queryForObject(
-                "SELECT id FROM student WHERE card_no = ?",
+                "SELECT student_id FROM student_card WHERE card_no = ?",
                 Long.class,
                 cardNo
         );

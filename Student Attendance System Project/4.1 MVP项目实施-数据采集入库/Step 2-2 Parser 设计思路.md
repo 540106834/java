@@ -37,7 +37,7 @@ Controller 只负责“收件”，Parser 负责“破译”。
 
 # 二、建议的 Parser 分层设计
 
-### 1️⃣ 报文对象模型（中间态）
+### 1️ 报文对象模型（中间态）
 
 ```java
 public class DeviceMessage {
@@ -55,7 +55,7 @@ public class DeviceMessage {
 
 ---
 
-### 2️⃣ ParserService 接口
+### 2️ ParserService 接口
 
 ```java
 public interface ParserService {
@@ -67,7 +67,7 @@ public interface ParserService {
 
 ---
 
-### 3️⃣ 实现逻辑（核心设计思路）
+### 3️ 实现逻辑（核心设计思路）
 
 逻辑流程：
 
