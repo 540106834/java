@@ -13,7 +13,7 @@ CREATE TABLE school_class (
 
 --- 插入班级数据
 INSERT INTO school_class (school_id, grade, name, status)
-VALUES (1, '2025级', '01班', 1);
+VALUES (1, '2025级', '02班', 1);
 
 --- 查询班级数据
 mysql> select * from school_class;
