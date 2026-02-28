@@ -50,6 +50,19 @@
 建议单独建一个查询控制器：
 
 ```java
+package com.jinshaoyong.attendance.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.jinshaoyong.attendance.dto.*;
+import com.jinshaoyong.attendance.service.AttendanceQueryService;
+
 @RestController
 @RequestMapping("/api")
 public class AttendanceQueryController {
@@ -76,45 +89,51 @@ public class AttendanceQueryController {
 #  第三步：Service 层逻辑
 
 ```java
+package com.jinshaoyong.attendance.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+import com.jinshaoyong.attendance.dto.*;
+
 @Service
 public class AttendanceQueryService {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+        @Autowired
+        private JdbcTemplate jdbcTemplate;
 
-    public List<ClassDto> getAllClasses() {
-        String sql = "SELECT id, name FROM school_class";
-        return jdbcTemplate.query(sql, (rs, rowNum) ->
-                new ClassDto(
-                        rs.getLong("id"),
-                        rs.getString("name")
-                ));
-    }
+        public List<ClassDto> getAllClasses() {
+                String sql = "SELECT id, name FROM school_class";
+                return jdbcTemplate.query(sql, (rs, rowNum) -> new ClassDto(
+                                rs.getLong("id"),
+                                rs.getString("name")));
+        }
 
-    public List<AttendanceDto> getAttendance(Long classId, String date) {
-        String sql = """
-                SELECT s.student_no,
-                       s.name AS student_name,
-                       COUNT(CASE WHEN ar.check_type = 0 THEN 1 END) AS in_count,
-                       COUNT(CASE WHEN ar.check_type = 1 THEN 1 END) AS out_count
-                FROM attendance_record ar
-                JOIN student s ON ar.student_id = s.id
-                JOIN student_card sc ON sc.student_id = s.id AND sc.status = 1
-                WHERE s.class_id = ?
-                  AND ar.check_date = ?
-                GROUP BY s.student_no, s.name
-                ORDER BY s.student_no
-                """;
+        public List<AttendanceDto> getAttendance(Long classId, String date) {
+                String sql = """
+                                SELECT s.student_no,
+                                       s.name AS student_name,
+                                       COUNT(CASE WHEN ar.check_type = 0 THEN 1 END) AS in_count,
+                                       COUNT(CASE WHEN ar.check_type = 1 THEN 1 END) AS out_count
+                                FROM attendance_record ar
+                                JOIN student s ON ar.student_id = s.id
+                                JOIN student_card sc ON sc.student_id = s.id AND sc.status = 1
+                                WHERE s.class_id = ?
+                                  AND ar.check_date = ?
+                                GROUP BY s.student_no, s.name
+                                ORDER BY s.student_no
+                                """;
 
-        return jdbcTemplate.query(sql, new Object[]{classId, date},
-                (rs, rowNum) ->
-                        new AttendanceDto(
-                                rs.getString("student_no"),
-                                rs.getString("student_name"),
-                                rs.getInt("in_count"),
-                                rs.getInt("out_count")
-                        ));
-    }
+                return jdbcTemplate.query(sql,
+                                (rs, rowNum) -> new AttendanceDto(
+                                                rs.getString("student_no"),
+                                                rs.getString("student_name"),
+                                                rs.getInt("in_count"),
+                                                rs.getInt("out_count")),
+                                classId, date);
+        }
 }
 ```
 
