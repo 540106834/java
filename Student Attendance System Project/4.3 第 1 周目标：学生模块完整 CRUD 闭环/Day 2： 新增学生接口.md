@@ -108,12 +108,12 @@ class StudentCreateRequest {
 # 4️ 测试 curl
 
 ```bash
-curl -X POST http://localhost:8080/api/students \
+curl -X POST http://192.168.11.171:8080/api/students \
 -H "Content-Type: application/json" \
 -d '{
-    "studentNo": "2026002",
-    "name": "李四",
-    "classId": 2
+    "studentNo": "20250121",
+    "name": "金嘉怡",
+    "classId": 1
 }'
 ```
 
@@ -128,14 +128,18 @@ success
 # 5️ 验证数据库
 
 ```sql
-SELECT * FROM student WHERE student_no='2026002';
+SELECT * FROM student WHERE student_no='20250121';
 ```
 
 应该能看到新记录：
-
-| id  | student_no | name | class_id | status | created_at       |
-| --- | ---------- | ---- | -------- | ------ | ---------------- |
-| ... | 2026002    | 李四   | 2        | 1      | 2026-03-01 12:00 |
+```bash
+mysql> select * from student where student_no=20250121;
++----+------------+-----------+----------+--------+-------------------------+-------------------------+
+| id | student_no | name      | class_id | status | created_at              | updated_at              |
++----+------------+-----------+----------+--------+-------------------------+-------------------------+
+| 43 | 20250121   | 金嘉怡    |        1 |      1 | 2026-03-01 22:28:48.811 | 2026-03-01 22:28:48.811 |
++----+------------+-----------+----------+--------+-------------------------+-------------------------+
+```
 
 ---
 
